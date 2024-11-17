@@ -1,0 +1,113 @@
+[gd_scene load_steps=15 format=3 uid="uid://xnxq3yenlm5m"]
+
+[ext_resource type="Texture2D" uid="uid://b4562wyr47nn" path="res://assets/tilemap-characters.png" id="1_1ry40"]
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="1_vrppx"]
+[ext_resource type="Script" path="res://scripts/player/player_stats.gd" id="2_3l1iy"]
+[ext_resource type="Script" path="res://scripts/player/components/input_controller.gd" id="4_7tw8n"]
+[ext_resource type="Script" path="res://scripts/state_machine/fsm.gd" id="5_dbndg"]
+[ext_resource type="Script" path="res://scripts/player/states/move_state.gd" id="6_nyx1l"]
+[ext_resource type="Script" path="res://scripts/player/states/death_state.gd" id="7_7p8l0"]
+
+[sub_resource type="Resource" id="Resource_toijf"]
+script = ExtResource("2_3l1iy")
+speed = 120.0
+acceleration = 60.0
+friction = 50.0
+air_friction = 10.0
+jump_strength = -250.0
+min_jump_strength = -100.0
+coyote_time = 0.1
+jump_buffer_time = 0.1
+gravity = 600.0
+fast_fall_gravity_addition = 400.0
+max_fall_speed = 1000.0
+dash_duration = 0.2
+dash_speed = 230.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c3gnt"]
+atlas = ExtResource("1_1ry40")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4cmqf"]
+atlas = ExtResource("1_1ry40")
+region = Rect2(25, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e5kpx"]
+atlas = ExtResource("1_1ry40")
+region = Rect2(25, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l6yrl"]
+atlas = ExtResource("1_1ry40")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_shdfl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c3gnt")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4cmqf")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e5kpx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l6yrl")
+}],
+"loop": true,
+"name": &"run",
+"speed": 8.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c4hvf"]
+radius = 8.0
+height = 24.0
+
+[node name="PlayerCharacter" type="CharacterBody2D" node_paths=PackedStringArray("input", "fsm")]
+collision_layer = 6
+script = ExtResource("1_vrppx")
+input = NodePath("InputController")
+stats = SubResource("Resource_toijf")
+fsm = NodePath("FSM")
+playback_color = Color(0.0562916, 0.0562916, 0.0562916, 1)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_shdfl")
+offset = Vector2(0, -12)
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -12)
+shape = SubResource("CapsuleShape2D_c4hvf")
+
+[node name="InputController" type="Node" parent="."]
+script = ExtResource("4_7tw8n")
+
+[node name="FSM" type="Node" parent="." node_paths=PackedStringArray("current_state")]
+script = ExtResource("5_dbndg")
+current_state = NodePath("MoveState")
+
+[node name="MoveState" type="Node" parent="FSM"]
+script = ExtResource("6_nyx1l")
+
+[node name="DeathState" type="Node" parent="FSM"]
+script = ExtResource("7_7p8l0")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, -12)
+shape = SubResource("CapsuleShape2D_c4hvf")

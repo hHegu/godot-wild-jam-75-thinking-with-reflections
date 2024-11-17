@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LevelResource" load_steps=3 format=3 uid="uid://be8a1lo7l3mjs"]
+
+[ext_resource type="PackedScene" uid="uid://cbfk2s7g2gxmq" path="res://scenes/levels/floating_tiles.tscn" id="1_pgksd"]
+[ext_resource type="Script" path="res://scripts/resources/level_resource.gd" id="1_w8l8x"]
+
+[resource]
+script = ExtResource("1_w8l8x")
+level_name = "Unusual ladders"
+level_scene = ExtResource("1_pgksd")

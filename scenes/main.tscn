@@ -1,0 +1,234 @@
+[gd_scene load_steps=13 format=3 uid="uid://c3vd38f5eadfg"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_v6js2"]
+[ext_resource type="Script" path="res://scripts/resources/level_resource.gd" id="2_7pwa0"]
+[ext_resource type="Resource" uid="uid://bctiuxauna15e" path="res://scenes/levels/intro.tres" id="3_t0fh1"]
+[ext_resource type="Resource" uid="uid://chlj5jcw6tdrw" path="res://scenes/levels/spikes.tres" id="4_efexs"]
+[ext_resource type="Resource" uid="uid://be8a1lo7l3mjs" path="res://scenes/levels/floating_tiles.tres" id="5_bcocb"]
+[ext_resource type="Script" path="res://scripts/ui/level_select_ui.gd" id="6_6kjwq"]
+[ext_resource type="Resource" uid="uid://dd0y1xmue0v0s" path="res://scenes/levels/boxes.tres" id="6_hwtcw"]
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="6_n8d0y"]
+
+[sub_resource type="Animation" id="Animation_a0pxr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-883.996, -740.442)]
+}
+
+[sub_resource type="Animation" id="Animation_s86xh"]
+resource_name = "transition_in"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-883.996, -740.442), Vector2(-232, -374)]
+}
+
+[sub_resource type="Animation" id="Animation_46v6c"]
+resource_name = "transition_out"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-232, -374), Vector2(508, 152)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sq1tw"]
+_data = {
+"RESET": SubResource("Animation_a0pxr"),
+"transition_in": SubResource("Animation_s86xh"),
+"transition_out": SubResource("Animation_46v6c")
+}
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_v6js2")
+levels = Array[ExtResource("2_7pwa0")]([ExtResource("3_t0fh1"), ExtResource("4_efexs"), ExtResource("5_bcocb"), ExtResource("6_hwtcw")])
+
+[node name="World" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+script = ExtResource("6_n8d0y")
+
+[node name="MainMenu" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainMenuButtonContainer" type="VBoxContainer" parent="UI/MainMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -56.0
+offset_top = -30.0
+offset_right = 56.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LevelSelectButton" type="Button" parent="UI/MainMenu/MainMenuButtonContainer"]
+layout_mode = 2
+text = "Level select"
+flat = true
+
+[node name="ExitButton" type="Button" parent="UI/MainMenu/MainMenuButtonContainer"]
+layout_mode = 2
+text = "Exit game"
+flat = true
+
+[node name="KenneyCredit" type="RichTextLabel" parent="UI/MainMenu"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -151.0
+offset_top = -18.0
+offset_right = -9.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/normal_font_size = 8
+text = "Assets by kenney (www.kenney.nl)"
+fit_content = true
+
+[node name="LevelSelectContainer" type="VBoxContainer" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -156.0
+offset_top = -72.0
+offset_right = 156.0
+offset_bottom = 67.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="LevelSelect" type="VBoxContainer" parent="UI/LevelSelectContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("6_6kjwq")
+
+[node name="BackToMainMenuButton" type="Button" parent="UI/LevelSelectContainer"]
+layout_mode = 2
+text = "Go back"
+flat = true
+
+[node name="LevelTransition" type="ColorRect" parent="UI"]
+unique_name_in_owner = true
+offset_left = -883.996
+offset_top = -740.442
+offset_right = 2.00403
+offset_bottom = 724.558
+rotation = 0.785398
+pivot_offset = Vector2(866.433, 719.573)
+color = Color(0, 0.266667, 0.152941, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/LevelTransition"]
+libraries = {
+"": SubResource("AnimationLibrary_sq1tw")
+}
+
+[node name="PauseMenuContainer" type="ColorRect" parent="UI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.2)
+
+[node name="PauseMenu" type="VBoxContainer" parent="UI/PauseMenuContainer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -56.0
+offset_top = -46.0
+offset_right = 56.0
+offset_bottom = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ResumeButton" type="Button" parent="UI/PauseMenuContainer/PauseMenu"]
+layout_mode = 2
+text = "Resume"
+flat = true
+
+[node name="RestartButton" type="Button" parent="UI/PauseMenuContainer/PauseMenu"]
+layout_mode = 2
+text = "Restart level"
+flat = true
+
+[node name="LevelSelectButton" type="Button" parent="UI/PauseMenuContainer/PauseMenu"]
+layout_mode = 2
+text = "Level select"
+flat = true
+
+[node name="ExitButton" type="Button" parent="UI/PauseMenuContainer/PauseMenu"]
+layout_mode = 2
+text = "Exit game"
+flat = true
+
+[node name="GameEndScreen" type="ColorRect" parent="UI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+color = Color(0, 0, 0, 0.439216)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/GameEndScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -138.0
+offset_top = -20.0
+offset_right = 138.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "[center]The end.
+Thank you for playing![/center]"

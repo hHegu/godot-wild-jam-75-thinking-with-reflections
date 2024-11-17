@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://qayt6jm3tgt3"]
+
+[ext_resource type="Texture2D" uid="uid://cidnbtd5y860m" path="res://assets/tilemap_packed.png" id="1_cs5sg"]
+[ext_resource type="Script" path="res://scripts/objects/pushable.gd" id="1_ycw71"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p60sc"]
+size = Vector2(18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e4ty5"]
+atlas = ExtResource("1_cs5sg")
+region = Rect2(162, 0, 18, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lhnv1"]
+size = Vector2(22, 16)
+
+[node name="Pushable" type="CharacterBody2D"]
+floor_stop_on_slope = false
+floor_block_on_wall = false
+platform_on_leave = 2
+script = ExtResource("1_ycw71")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(8, -8)
+shape = SubResource("RectangleShape2D_p60sc")
+
+[node name="Sprite2D" type="Sprite2D" parent="CollisionShape2D"]
+texture = SubResource("AtlasTexture_e4ty5")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(8, -8)
+shape = SubResource("RectangleShape2D_lhnv1")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
